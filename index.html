@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+        <link href="styles.css" rel="stylesheet">
+        <title>Trivia!</title>
+
+        <script>
+
+            var counter = 1;
+            function colorChangeAndMessage(color, button_number)
+            {
+                 // The backticks are important in order to be able to insert the template string that could accomodate another variable ``
+                 // By sending the id-number (the only thing that differs in each of the 4 buttons) as an argument to the colorChange function (button_number)
+                 // and using its value via interpolation into a template literal (in other words, inserting its value in the string taken by getElementById)
+                 // we are able to design the code better and remove the otherwise redundant implementation that would've achieved the same purpose.
+                 //
+                 //             document.getElementById(`button-${button_number}`).style.backgroundColor = color;
+
+                 // However, there's another way to implement this same effect:
+                document.querySelectorAll('button')[button_number - 1].style.backgroundColor = color;
+
+                if (counter == 1)
+                {
+                    var x = document.createElement('p');
+                    if (color == 'red')    
+
+                    // Comments show an alternate method to put text inside the paragraph element just created.
+                    // All 3 steps would need done.
+                    {
+                        // var y = document.createTextNode('Incorrect');
+                        x.textContent = 'Incorrect'
+                    }
+                    else if (color == 'green')
+                    {
+                        // var y = document.createTextNode('Correct!');
+                        x.textContent = 'Correct!'
+                    }
+
+                    // x.appendChild(y);
+                    
+                    // Gets the div with class section from the DOM 
+                    var parent_node = document.querySelector('.section');       
+
+                    // Gets the first instance of a button element from the DOM
+                    var before_this_node = document.querySelector('button');   
+
+                    // Inserts the paragraph (Incorrect/Correct!) before the button i.e underneath the question
+                    parent_node.insertBefore(x, before_this_node);            
+                }
+                else if (counter != 1 && color == 'red')
+                {
+                    document.querySelector('p').innerText = 'Incorrect'
+                }
+                else if (counter != 1 && color == 'green')
+                {
+                    document.querySelector('p').innerText = 'Correct!'
+                }
+
+                counter++;
+            }
+
+            // Code for Part 2: Free Response
+
+            document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById('click').addEventListener('click', function() {
+                    var text_field = document.getElementById('text');
+
+                    // Gets the second instance of div that with class 'section' 
+                    var freeResponse_parent_node = document.querySelectorAll('.section')[1]; 
+                     
+                    // First attempt case
+                    if (counter == 1)
+                    {
+                        // Create a paragraph element when a user enters data for the first time in the field
+                        var ans_confirmation = document.createElement('p');
+
+                        // If answer is correct, turn field green and display message 'Correct' beneath the question
+                        if (text_field.value == '8')
+                        {
+                            text_field.style.backgroundColor = 'green';
+                            ans_confirmation.textContent = 'Correct!';
+                            freeResponse_parent_node.insertBefore(ans_confirmation, text_field);
+                        }
+
+                        // If answer is incorrect, turn field red and display message 'Incorrect' beneath the question
+                        else
+                        {
+                            text_field.style.backgroundColor = '#FF0000';
+                            ans_confirmation.textContent = 'Incorrect';
+                            freeResponse_parent_node.insertBefore(ans_confirmation, text_field);
+                        }
+                    }
+
+                    // If the user attempts to answer for the second time, do not create a new paragraph element.
+                    // Merely modify the contents of the already-created paragraph element.
+                    else if (counter != 1 && text_field.value == '8')
+                    {
+                        text_field.style.backgroundColor = 'green';
+                        document.querySelector('p').innerText = 'Correct!';
+                    }
+                    else if (counter != 1 && text_field.value != '8')
+                    {
+                        text_field.style.backgroundColor = '#FF0000';
+                        document.querySelector('p').innerText = 'Incorrect';
+                    }
+
+                    counter++
+
+                })
+            });
+
+        </script>
+
+    </head>
+    <body>
+
+        <div class="jumbotron">
+            <h1>Trivia!</h1>
+        </div>
+
+        <div class="container">
+
+            <div class="section">
+                <h2>Part 1: Multiple Choice </h2>
+                <hr>
+
+                <!-- Add multiple choice question -->
+                <h3>The sound producing organs in birds are?</h3>
+                <button onclick="colorChangeAndMessage('green', 1)" >syrnix</button>
+                <button onclick="colorChangeAndMessage('red', 2)" >larynx</button>
+                <button onclick="colorChangeAndMessage('red', 3)" >trachea</button>
+                <button onclick="colorChangeAndMessage('red', 4)" >alleveoli</button>
+            </div>
+
+            <div class="section">
+                <h2>Part 2: Free Response</h2>
+                <hr>
+
+                <!-- Add free response question -->
+                <h3> How many datatypes are there in JavaScript? </h3>
+                <input type=text id="text"></input>
+                <button id="click">Check Answer</button>
+            </div>
+        </div>
+    </body>
+</html>
